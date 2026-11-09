@@ -1,8 +1,8 @@
 {
-  "name": "signal-verdict",
+  "name": "soc-helper",
   "version": "1.0.0",
   "private": true,
-  "description": "Normalized threat intelligence lookup API",
+  "description": "SOC Helper threat intelligence lookup API",
   "scripts": { "start": "node server.js", "dev": "node server.js" },
   "engines": { "node": ">=20" }
 }

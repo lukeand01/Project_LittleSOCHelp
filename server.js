@@ -10,6 +10,10 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
     return res.end(JSON.stringify({ status: "ok" }));
   }
+  if (url.pathname === "/favicon.svg" && ["GET", "HEAD"].includes(req.method)) {
+    res.writeHead(200, { "Content-Type": "image/svg+xml", "Cache-Control": "public, max-age=86400" });
+    return res.end(req.method === "HEAD" ? undefined : fs.readFileSync(path.join(__dirname, "favicon.svg")));
+  }
   if ((url.pathname === "/" || url.pathname === "/index.html") && ["GET", "HEAD"].includes(req.method)) {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
     return res.end(req.method === "HEAD" ? undefined : index);
@@ -43,4 +47,5 @@ const port = Number(process.env.PORT || 10000);
 server.listen(port, "0.0.0.0", () => {
   console.log("Signal listening on port " + port);
 });
+
 
