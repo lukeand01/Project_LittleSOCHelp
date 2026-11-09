@@ -4,6 +4,5 @@
   "private": true,
   "description": "SOC Helper threat intelligence lookup API",
   "scripts": { "start": "node server.js", "dev": "node server.js" },
-  "engines": { "node": ">=20" }
+  "engines": { "node": ">=22.18.0" }
 }
-

@@ -1,4 +1,5 @@
 const net = require("node:net");
+const database = require("./database");
 
 const json = (res, status, body) => {
   res.statusCode = status;
@@ -123,9 +124,13 @@ async function analyze(input) {
   const sources = await Promise.all([abuseIpdb(indicator), urlhaus(indicator), otx(indicator)]);
   const available = sources.filter(source => source.status === "ok");
   const flagged = available.filter(source => source.malicious);
+  const verdict = !available.length ? "unknown" : flagged.length ? "malicious" : "clean";
+  if (indicator.type === "ip" && verdict === "malicious") {
+    database.save(indicator.value, Math.round(flagged.length / available.length * 100), flagged.map(source => source.source));
+  }
   return {
     indicator,
-    verdict: !available.length ? "unknown" : flagged.length ? "malicious" : "clean",
+    verdict,
     confidence: available.length ? Math.round(flagged.length / available.length * 100) : null,
     summary: flagged.length
       ? "Flagged by " + flagged.length + " of " + available.length + " available sources."
@@ -161,3 +166,4 @@ module.exports = async (req, res) => {
   }
 };
 
+module.exports.listSuspiciousIps = database.list;
